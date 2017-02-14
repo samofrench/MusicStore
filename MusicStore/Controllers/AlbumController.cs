@@ -6,6 +6,8 @@ using MusicStore.DataAccessLayer;
 using MusicStore.Models;
 using PagedList;
 using System.Data.Entity.Infrastructure;
+using System.Threading.Tasks;
+using PagedList.EntityFramework;
 
 namespace MusicStore.Controllers
 {
@@ -15,7 +17,7 @@ namespace MusicStore.Controllers
         private int pageSize = 10;
 
         // GET: Album
-        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public async Task<ViewResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -58,17 +60,17 @@ namespace MusicStore.Controllers
 
             int pageNumber = (page ?? 1);
 
-            return View(albums.ToPagedList(pageNumber, pageSize));
+            return View(await albums.ToPagedListAsync(pageNumber, pageSize));
         }
 
         // GET: Album/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums.Find(id);
+            Album album = await db.Albums.FindAsync(id);
             if (album == null)
             {
                 return HttpNotFound();
@@ -88,14 +90,14 @@ namespace MusicStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Name,RecordLabelId,RecordLabel,CatNo,ArtworkUrl,Notes,Country,Year,Discs,Audio")] Album album)
+        public async Task<ActionResult> Create([Bind(Include = "Name,RecordLabelId,RecordLabel,CatNo,ArtworkUrl,Notes,Country,Year,Discs,Audio")] Album album)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     db.Albums.Add(album);
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                     return RedirectToAction("Index");
                 }
             }
@@ -110,14 +112,14 @@ namespace MusicStore.Controllers
         }
 
         // GET: Album/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Album album = db.Albums.Find(id);
+            Album album = await db.Albums.FindAsync(id);
 
             if (album == null)
             {
@@ -134,20 +136,20 @@ namespace MusicStore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult EditPost(int? id)
+        public async Task<ActionResult> EditPost(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var albumToUpdate = db.Albums.Find(id);
+            var albumToUpdate = await db.Albums.FindAsync(id);
             if (TryUpdateModel(albumToUpdate, "",
                 new string[] { "Name", "RecordLabelId", "RecordLabel", "CatNo", "ArtworkUrl", "Notes", "Country", "Year", "Discs", "Audio"}))
             {
                 try
                 {
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
 
                     return RedirectToAction("Index");
                 }
@@ -163,7 +165,7 @@ namespace MusicStore.Controllers
         }
 
         // GET: Album/Delete/5
-        public ActionResult Delete(int? id, bool? saveChangesError = false)
+        public async Task<ActionResult> Delete(int? id, bool? saveChangesError = false)
         {
             if (id == null)
             {
@@ -174,7 +176,7 @@ namespace MusicStore.Controllers
                 ViewBag.ErrorMessage =
                     "Delete failed. Try again, and if the problem persists contact your system administrator.";
             }
-            Album album = db.Albums.Find(id);
+            Album album = await db.Albums.FindAsync(id);
             if (album == null)
             {
                 return HttpNotFound();
@@ -185,13 +187,13 @@ namespace MusicStore.Controllers
         // POST: Album/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
-                Album album = db.Albums.Find(id);
+                Album album = await db.Albums.FindAsync(id);
                 db.Albums.Remove(album);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (RetryLimitExceededException exception)
             {
