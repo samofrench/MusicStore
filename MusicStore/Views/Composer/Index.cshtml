@@ -1,0 +1,47 @@
+﻿@model PagedList.IPagedList<MusicStore.Models.View_Models.Composer.ComposerViewModel>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" />
+
+@{
+    ViewBag.Title = "Composers";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Name", "Index", new { SortOrder = ViewBag.NameSortParam })
+        </th>
+        <th>
+            @Html.ActionLink("b.", "Index", new { SortOrder = ViewBag.BirthSortParam })
+        </th>
+        <th>
+            d.
+        </th>
+        <th>
+            @Html.ActionLink("Albums", "Index", new { sortOrder = ViewBag.AlbumSortParam })
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.FullName, "Details", new { id = item.ComposerId })
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BirthYear)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DeathYear)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AlbumsCount)
+        </td>
+    </tr>
+}
+
+</table>
+<br/>
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort }))

@@ -1,0 +1,53 @@
+﻿@model MusicStore.Models.View_Models.Composer.ComposerViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<header>
+    <h1>@Model.FullName</h1>
+    <small>(@Model.BirthYear - @Model.DeathYear)</small>
+</header>
+
+<div>
+    <hr />
+    
+    <p>
+        @Html.DisplayNameFor(model => model.Pieces) (@Model.PiecesCount)
+    </p>
+
+    @foreach (var piece in Model.Pieces)
+    {
+        <p>
+            @Html.ActionLink(piece.Name, "Details", "Piece", new { id = piece.Id }, null)
+        </p>
+    }
+
+    <p>
+        @Html.DisplayNameFor(model => model.Albums) (@Model.AlbumsCount)
+    </p>
+
+    @foreach (var album in Model.Albums)
+    {
+        <p>
+            @Html.ActionLink(album.Name, "Details", "Album", new { id = album.Id }, null)
+        </p>
+    }
+
+    <p>
+        @Html.DisplayNameFor(model => model.Performers) (@Model.PerformersCount)
+    </p>
+
+    @foreach (var performer in Model.Performers)
+    {
+        <p>
+            @Html.ActionLink(performer.Name, "Details", "Performer", new { id = performer.Id }, null)
+        </p>
+    }
+
+</div>
+<p>
+    @Html.ActionLink("All Composers", "Index") |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ComposerId }) |
+    @Html.ActionLink("x", "Delete", new { id = Model.ComposerId })
+</p>

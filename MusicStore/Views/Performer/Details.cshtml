@@ -1,0 +1,37 @@
+﻿@using MusicStore.Models
+@model MusicStore.Models.View_Models.Performer.PerformerViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<header>
+    <h1>@Html.DisplayFor(model => model.Name)</h1>
+    <h2>@Html.DisplayFor(model => model.RolesFormatted)</h2>
+</header>
+<div>
+    <hr />
+
+    <p>
+        @Html.DisplayNameFor(model => model.Albums) (@Model.AlbumsCount)
+    </p>
+
+    @foreach (var album in Model.Albums)
+    {
+        @Html.ActionLink(album.Name, "Details", "Album", new { id = album.Id }, null)
+    }
+
+    <p>
+        @Html.DisplayNameFor(model => model.Composers) (@Model.ComposersCount)
+    </p>
+
+    @foreach (var composer in Model.Composers)
+    {
+        @Html.ActionLink(composer.FullName, "Details", "Composer", new { id = composer.Id }, null)
+    }
+
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PerformerId }) |
+    @Html.ActionLink("x", "Delete", new { id = Model.PerformerId })
+</p>

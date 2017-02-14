@@ -1,0 +1,100 @@
+﻿@model MusicStore.Models.Album
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<img src="@Model.ArtworkUrl" style="height: 220px;"/>
+<h2>@Html.DisplayFor(model => model.Name)</h2>
+<h4>@Html.DisplayFor(model => model.CatNo)</h4>
+<h4>@Html.DisplayFor(model => model.RecordLabel.Name)</h4>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RecordLabel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RecordLabel.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Country)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Country)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Discs)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Discs)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Audio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Audio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+        
+        <dt>
+            Pieces
+        </dt>
+        <dd>
+            <table>
+                <tr>
+                    <th>Work</th>
+                    <th>Composer</th>
+                    <th>Credits</th>
+                </tr>
+                @foreach (var item in Model.Recordings)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Piece.Name)</td>
+                        <td>@Html.ActionLink(item.Piece.Composer.FullName, "Details", "Composer", new { id = item.Piece.ComposerId }, null)</td>
+                        <table>
+                            <tr>
+                                <th>Name</th>
+                                <th>Role</th>
+                            </tr>
+                            @foreach (var rec in item.Credits)
+                            {
+                                <tr>
+                                    <td>@Html.ActionLink(rec.Performer.Name, "Details", "Performer", new { id = rec.PerformerId }, null)</td>
+                                    <td>@Html.DisplayFor(recording => rec.Role)</td>
+                                </tr>
+                            }
+                        </table>
+                    </tr>
+                }
+            </table>
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Delete", "Delete", new {id = Model.Id})
+</p>

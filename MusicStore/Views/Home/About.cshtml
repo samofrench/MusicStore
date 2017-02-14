@@ -1,0 +1,102 @@
+﻿@model MusicStore.Models.View_Models.About.AboutViewModel
+
+@{
+    ViewBag.Title = "Collection Statistics";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@*Count albums by record label*@
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(m => m.LabelAlbumData.First().RecordLabel)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.LabelAlbumData.First().AlbumCount)
+        </th>
+    </tr>
+    
+    @foreach (var item in Model.LabelAlbumData)
+    {
+        <tr>
+            <td>
+                @item.RecordLabel.Name
+            </td>
+            <td>
+                @item.AlbumCount
+            </td>
+        </tr>
+    }
+</table>
+<br/>
+@*Count pieces by composer*@
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(m => m.ComposerPieceData.First().Composer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.ComposerPieceData.First().PieceCount)
+        </th>
+    </tr>
+
+    @foreach (var item in Model.ComposerPieceData)
+    {
+        <tr>
+            <td>
+                @item.Composer.FullName
+            </td>
+            <td>
+                @item.PieceCount
+            </td>
+        </tr>
+    }
+</table>
+<br/>
+@*Count albums by composer*@
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(m => m.ComposerAlbumData.First().Composer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.ComposerAlbumData.First().AlbumCount)
+        </th>
+    </tr>
+
+    @foreach (var item in Model.ComposerAlbumData)
+    {
+        <tr>
+            <td>
+                @item.Composer.FullName
+            </td>
+            <td>
+                @item.AlbumCount
+            </td>
+        </tr>
+    }
+</table>
+@*Count albums by performer*@
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(m => m.PerformerAlbumData.FirstOrDefault().Performer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.PerformerAlbumData.FirstOrDefault().AlbumCount)
+        </th>
+    </tr>
+
+    @foreach (var item in Model.PerformerAlbumData)
+    {
+        <tr>
+            <td>
+                @item.Performer.Name
+            </td>
+            <td>
+                @item.AlbumCount
+            </td>
+        </tr>
+    }
+</table>

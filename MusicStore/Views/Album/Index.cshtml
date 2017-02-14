@@ -1,0 +1,84 @@
+﻿@model IEnumerable<MusicStore.Models.Album>
+@using PagedList
+@using PagedList.Mvc
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css"/>
+
+@{
+    ViewBag.Title = "Albums";
+    var pagedList = (IPagedList) Model;
+}
+
+<h2>Albums</h2>
+
+<p>
+    @Html.ActionLink("+ Create New", "Create")
+</p>
+
+@using (Html.BeginForm("Index", "Album", FormMethod.Get))
+{
+    <p>
+        Search: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search"/>
+    </p>    
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecordLabel)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CatNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Country)
+        </th>
+        <th>
+            @Html.ActionLink("Year", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Discs)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Audio)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <a href="@Url.Action("Details", "Album", new { id = item.Id})"> 
+                @Html.DisplayFor(modelItem => item.Name)
+            </a>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecordLabel.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CatNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Country)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Year)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Discs)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Audio)
+        </td>
+    </tr>
+}
+
+</table>
+<br/>
+
+Page @(pagedList.PageCount < pagedList.PageNumber ? 0 : pagedList.PageNumber) of @pagedList.PageCount
+
+@Html.PagedListPager(pagedList, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
