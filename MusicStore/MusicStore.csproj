@@ -239,6 +239,10 @@
     <Compile Include="Migrations\201702101916027_InitialCreate.Designer.cs">
       <DependentUpon>201702101916027_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702142336008_RowVersion.cs" />
+    <Compile Include="Migrations\201702142336008_RowVersion.Designer.cs">
+      <DependentUpon>201702142336008_RowVersion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\Composer.cs" />
@@ -276,7 +280,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Properties\PublishProfiles\test.pubxml" />
+    <None Include="Properties\PublishProfiles\SamF-MusicStore - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -361,6 +365,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201702101916027_InitialCreate.resx">
       <DependentUpon>201702101916027_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702142336008_RowVersion.resx">
+      <DependentUpon>201702142336008_RowVersion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

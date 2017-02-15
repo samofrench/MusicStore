@@ -36,6 +36,9 @@ namespace MusicStore.Models
 
         public Enums.Audio Audio { get; set; }
 
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
         public virtual ICollection<Recording> Recordings { get; set; }
     }
 }
