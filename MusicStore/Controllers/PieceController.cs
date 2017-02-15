@@ -9,12 +9,14 @@ using PagedList;
 
 namespace MusicStore.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class PieceController : Controller
     {
         private MusicContext db = new MusicContext();
         private const int page_size = 10;
 
         // GET: Piece
+        [AllowAnonymous]
         public ActionResult Index(string sortOrder, int page = 1)
         {
 
@@ -46,6 +48,7 @@ namespace MusicStore.Controllers
         }
 
         // GET: Piece/Details/5
+        [AllowAnonymous]
         public ActionResult Details(int? id)
         {
             if (id == null)

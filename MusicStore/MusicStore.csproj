@@ -254,9 +254,9 @@
     <Compile Include="Models\View Models\About\ComposerAlbumGroup.cs" />
     <Compile Include="Models\View Models\About\ComposerPieceGroup.cs" />
     <Compile Include="Models\View Models\Composer\ComposerViewModel.cs" />
+    <Compile Include="Models\View Models\IdentityModels.cs" />
     <Compile Include="Models\View Models\Performer\PerformerViewModel.cs" />
     <Compile Include="Models\View Models\Piece\PieceDetailsViewModel.cs" />
-    <Compile Include="Models\View Models\IdentityModels.cs" />
     <Compile Include="Models\View Models\ManageViewModels.cs" />
     <Compile Include="Models\View Models\About\LabelAlbumGroup.cs" />
     <Compile Include="Models\Credit.cs" />

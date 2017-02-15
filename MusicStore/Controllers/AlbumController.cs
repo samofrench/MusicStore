@@ -82,6 +82,7 @@ namespace MusicStore.Controllers
         }
 
         // GET: Album/Create
+        [Authorize]
         public ActionResult Create()
         {
             PopulateLabelsDropdown();
@@ -91,6 +92,7 @@ namespace MusicStore.Controllers
         // POST: Album/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(
@@ -117,6 +119,7 @@ namespace MusicStore.Controllers
         }
 
         // GET: Album/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -139,6 +142,7 @@ namespace MusicStore.Controllers
         // POST: Album/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin")]
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditPost(int? id, byte[] rowVersion)
@@ -232,6 +236,7 @@ namespace MusicStore.Controllers
         }
 
         // GET: Album/Delete/5
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Delete(int? id, bool? concurrencyError)
         {
             if (id == null)
@@ -264,6 +269,7 @@ namespace MusicStore.Controllers
         }
 
         // POST: Album/Delete/5
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(Album album)
