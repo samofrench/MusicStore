@@ -9,10 +9,10 @@ using MusicStore.Models;
 
 namespace MusicStore.DataAccessLayer
 {
-    public class MusicInitializer : System.Data.Entity.DropCreateDatabaseIfModelChanges<MusicContext>
+    public class MusicInitializer : System.Data.Entity.DropCreateDatabaseIfModelChanges<ApplicationDbContext>
     {
 
-        protected override void Seed(MusicContext context)
+        protected override void Seed(ApplicationDbContext context)
         {
             //const string lvb = "Beethoven";
             //const string wam = "Mozart";

@@ -16,7 +16,7 @@ namespace MusicStore.Controllers
 {
     public class AlbumController : Controller
     {
-        private MusicContext db = new MusicContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
         private int pageSize = 10;
 
         // GET: Album
@@ -119,7 +119,7 @@ namespace MusicStore.Controllers
         }
 
         // GET: Album/Edit/5
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "canEditUsers")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -142,7 +142,7 @@ namespace MusicStore.Controllers
         // POST: Album/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "canEditUsers")]
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditPost(int? id, byte[] rowVersion)
@@ -236,7 +236,7 @@ namespace MusicStore.Controllers
         }
 
         // GET: Album/Delete/5
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "canEditUsers")]
         public async Task<ActionResult> Delete(int? id, bool? concurrencyError)
         {
             if (id == null)
@@ -269,7 +269,7 @@ namespace MusicStore.Controllers
         }
 
         // POST: Album/Delete/5
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "canEditUsers")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(Album album)

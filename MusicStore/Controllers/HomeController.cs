@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Web.Mvc;
-using MusicStore.DataAccessLayer;
+using MusicStore.Models;
 using MusicStore.Models.View_Models;
 using MusicStore.Models.View_Models.About;
 
@@ -10,7 +9,7 @@ namespace MusicStore.Controllers
 {
     public class HomeController : Controller
     {
-        private MusicContext db = new MusicContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public ActionResult Index()
         {

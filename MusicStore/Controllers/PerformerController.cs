@@ -3,17 +3,16 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using MusicStore.DataAccessLayer;
 using MusicStore.Models;
 using MusicStore.Models.View_Models.Performer;
 using PagedList;
 
 namespace MusicStore.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "canEditUsers")]
     public class PerformerController : Controller
     {
-        private MusicContext db = new MusicContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
         private const int page_size = 10;
 
         // GET: Performer

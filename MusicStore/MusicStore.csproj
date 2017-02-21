@@ -235,13 +235,9 @@
     </Compile>
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Migrations\201702101916027_InitialCreate.cs" />
-    <Compile Include="Migrations\201702101916027_InitialCreate.Designer.cs">
-      <DependentUpon>201702101916027_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201702142336008_RowVersion.cs" />
-    <Compile Include="Migrations\201702142336008_RowVersion.Designer.cs">
-      <DependentUpon>201702142336008_RowVersion.cs</DependentUpon>
+    <Compile Include="Migrations\201702211807187_InitialMigration.cs" />
+    <Compile Include="Migrations\201702211807187_InitialMigration.Designer.cs">
+      <DependentUpon>201702211807187_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Album.cs" />
@@ -254,7 +250,7 @@
     <Compile Include="Models\View Models\About\ComposerAlbumGroup.cs" />
     <Compile Include="Models\View Models\About\ComposerPieceGroup.cs" />
     <Compile Include="Models\View Models\Composer\ComposerViewModel.cs" />
-    <Compile Include="Models\View Models\IdentityModels.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\View Models\Performer\PerformerViewModel.cs" />
     <Compile Include="Models\View Models\Piece\PieceDetailsViewModel.cs" />
     <Compile Include="Models\View Models\ManageViewModels.cs" />
@@ -363,11 +359,8 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201702101916027_InitialCreate.resx">
-      <DependentUpon>201702101916027_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702142336008_RowVersion.resx">
-      <DependentUpon>201702142336008_RowVersion.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702211807187_InitialMigration.resx">
+      <DependentUpon>201702211807187_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -9,10 +9,10 @@ using PagedList;
 
 namespace MusicStore.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "canEditUsers")]
     public class PieceController : Controller
     {
-        private MusicContext db = new MusicContext();
+        private ApplicationDbContext db = new ApplicationDbContext();
         private const int page_size = 10;
 
         // GET: Piece

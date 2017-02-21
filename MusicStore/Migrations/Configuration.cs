@@ -1,19 +1,21 @@
 namespace MusicStore.Migrations
 {
+    using System;
+    using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
     using System.Collections.Generic;
-    using Enums;
-    using Models;
+    using MusicStore.Enums;
+    using MusicStore.Models;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<MusicStore.DataAccessLayer.MusicContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<MusicStore.Models.ApplicationDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(MusicStore.DataAccessLayer.MusicContext context)
+        protected override void Seed(MusicStore.Models.ApplicationDbContext context)
         {
             //const string lvb = "Beethoven";
             //const string wam = "Mozart";
@@ -217,6 +219,7 @@ namespace MusicStore.Migrations
             //        Audio = Audio.Stereo
             //    }
             //};
+
             //foreach (var a in albumsList)
             //{
             //    context.Albums.AddOrUpdate(a);
@@ -328,7 +331,7 @@ namespace MusicStore.Migrations
             //    new Credit(Per8.Id, Per8, r13.RecordingId, r13, role5),
             //    new Credit(Per8.Id, Per8, r14.RecordingId, r14, role5)
             //};
-
+            
             //foreach (var c in creditsList)
             //{
             //    context.Credits.AddOrUpdate(c);
