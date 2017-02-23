@@ -29,8 +29,8 @@ namespace MusicStore
                 roleManager.Create(role);
 
                 var user = new ApplicationUser();
-                user.UserName = "ADMIN_USER";
-                user.Email = "ADMIN_USER";
+                user.UserName = "{{ADMIN_USER}}";
+                user.Email = "{{ADMIN_USER}}";
 
                 string userPwd = "ADMIN_PASSWORD";
 
