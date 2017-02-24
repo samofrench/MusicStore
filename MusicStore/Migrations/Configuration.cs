@@ -331,7 +331,7 @@ namespace MusicStore.Migrations
             //    new Credit(Per8.Id, Per8, r13.RecordingId, r13, role5),
             //    new Credit(Per8.Id, Per8, r14.RecordingId, r14, role5)
             //};
-            
+
             //foreach (var c in creditsList)
             //{
             //    context.Credits.AddOrUpdate(c);

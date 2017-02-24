@@ -9,6 +9,8 @@
 <h4>@Html.DisplayFor(model => model.CatNo)</h4>
 <h4>@Html.DisplayFor(model => model.RecordLabel.Name)</h4>
 
+@Html.Action("_AddAlbum", new { album = Model})
+
 <div>
     <hr />
     <dl class="dl-horizontal">

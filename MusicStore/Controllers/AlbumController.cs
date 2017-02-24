@@ -4,12 +4,11 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using MusicStore.DataAccessLayer;
 using MusicStore.Models;
-using PagedList;
 using System.Data.Entity.Infrastructure;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
+using MusicStore.Models.View_Models.Album;
 using PagedList.EntityFramework;
 
 namespace MusicStore.Controllers
@@ -85,38 +84,86 @@ namespace MusicStore.Controllers
         [Authorize]
         public ActionResult Create()
         {
-            PopulateLabelsDropdown();
+
+            //PopulateLabelsDropdown();
+            ViewBag.CurrentPage = "_Page1";
+
+
+
+
             return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Page1(CreateAlbumViewModel viewModel)
+        {
+            ViewBag.CurrentPage = "_Page1";
+
+            return View("Create", viewModel);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Page2(CreateAlbumViewModel viewModel)
+        {
+            ViewBag.CurrentPage = "_Page2";
+
+            return View("Create", viewModel);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Page3(CreateAlbumViewModel viewModel)
+        {
+            ViewBag.CurrentPage = "_Page3";
+
+            return View("Create", viewModel);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create(CreateAlbumViewModel viewModel)
+        {
+            return RedirectToAction("Index");
+
+            //db.SaveChangesAsync();
+
+            //return RedirectToAction("Details", new {id = album.Id});
         }
 
         // POST: Album/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(
-            [Bind(Include = "Name,RecordLabelId,RecordLabel,CatNo,ArtworkUrl,Notes,Country,Year,Discs,Audio")] Album
-                album)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    db.Albums.Add(album);
-                    await db.SaveChangesAsync();
-                    return RedirectToAction("Index");
-                }
-            }
-            catch (RetryLimitExceededException exception)
-            {
-                ModelState.AddModelError("",
-                    "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-            }
+        //[Authorize]
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> Create(
+        //    [Bind(Include = "Name,RecordLabelId,RecordLabel,CatNo,ArtworkUrl,Notes,Country,Year,Discs,Audio")] Album
+        //        album)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            db.Albums.Add(album);
+        //            await db.SaveChangesAsync();
+        //            return RedirectToAction("Index");
+        //        }
+        //    }
+        //    catch (RetryLimitExceededException exception)
+        //    {
+        //        ModelState.AddModelError("",
+        //            "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+        //    }
 
-            PopulateLabelsDropdown(album.RecordLabelId);
-            return View(album);
-        }
+        //    PopulateLabelsDropdown(album.RecordLabelId);
+        //    return View(album);
+        //}
 
         // GET: Album/Edit/5
         [Authorize(Roles = "canEditUsers")]
@@ -300,12 +347,88 @@ namespace MusicStore.Controllers
             base.Dispose(disposing);
         }
 
-        private void PopulateLabelsDropdown(object selectedLabel = null)
+        private void PopulateLabelsDropdown(object selected = null)
         {
-            var labelsQuery = db.Labels.OrderByDescending(l => l.Albums.Count);
+            var query = db.Labels.OrderByDescending(l => l.Albums.Count);
 
-            ViewBag.RecordLabelId = new SelectList(labelsQuery, "Id", "Name", selectedLabel);
+            ViewBag.RecordLabelId = new SelectList(query, "Id", "Name", selected);
+        }
+
+        private void PopulatePiecesDropdown(object selected = null)
+        {
+            var query = db.Pieces.OrderBy(p => p.Composer.LastName);
+            ViewBag.PieceId = new SelectList(query, "Id", "Name", selected);
+        }
+
+        private void PopulateComposersDropdown(object selected = null)
+        {
+            var query = db.Composers.OrderBy(p => p.LastName);
+            ViewBag.ComposerId = new SelectList(query, "Id", "AlphaName", selected);
+        }
+
+        private void PopulatePerformersDropdown(object selected = null)
+        {
+            var query = db.Performers.OrderBy(p => p.Name);
+            ViewBag.PerfoermerId = new SelectList(query, "Id", "Name", selected);
+        }
+
+        public ActionResult _AddAlbum(Album album)
+        {
+            return PartialView("_AddAlbum", album);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> _AddAlbum(int id)
+        {
+            string currentUserId = User.Identity.GetUserId();
+            bool hasAlbum = db.UserAlbums.Any(u => u.ApplicationUserId == currentUserId && u.AlbumId == id);
+            Album album = await db.Albums.FirstAsync(a => a.Id == id);
+            ApplicationUser owner = await db.Users.FirstAsync(u => u.Id == currentUserId);
+
+            if (!hasAlbum)
+            {
+                db.UserAlbums.Add(new UserAlbum()
+                {
+                    AlbumId = id,
+                    ApplicationUserId = User.Identity.GetUserId(),
+                    Album = album,
+                    Owner = owner,
+                    Sound = string.Empty,
+                    Condition = string.Empty,
+                    Eq = string.Empty,
+                    Notes = string.Empty,
+                    Clean = true,
+                    Donate = false,
+                    Needs = false,
+                    Sell = false
+                });
+
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", album);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> _RemoveAlbum(int id)
+        {
+            string currentUserId = User.Identity.GetUserId();
+            UserAlbum toDelete = await db.UserAlbums.FirstAsync(u => u.ApplicationUserId == currentUserId && u.AlbumId == id);
+            Album album = await db.Albums.FirstAsync(a => a.Id == id);
+
+            if (toDelete != null)
+            {
+                db.UserAlbums.Remove(toDelete);
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", album);
         }
 
     }
+
 }

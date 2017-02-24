@@ -1,0 +1,6 @@
+﻿@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <input type="submit" value="Prev" formaction="/Album/Page1" formmethod="post" />
+    <input type="submit" value="Next" formaction="/Album/Page3" formmethod="post" />
+}

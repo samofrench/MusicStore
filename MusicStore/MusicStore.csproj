@@ -219,6 +219,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AlbumController.cs" />
+    <Compile Include="Controllers\CollectionController.cs" />
     <Compile Include="Controllers\ComposerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -239,16 +240,29 @@
     <Compile Include="Migrations\201702211807187_InitialMigration.Designer.cs">
       <DependentUpon>201702211807187_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702232019079_AlbumOwnership.cs" />
+    <Compile Include="Migrations\201702232019079_AlbumOwnership.Designer.cs">
+      <DependentUpon>201702232019079_AlbumOwnership.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702232141106_Ownership2.cs" />
+    <Compile Include="Migrations\201702232141106_Ownership2.Designer.cs">
+      <DependentUpon>201702232141106_Ownership2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Album.cs" />
     <Compile Include="Models\Composer.cs" />
     <Compile Include="Models\Performer.cs" />
     <Compile Include="Models\Piece.cs" />
     <Compile Include="Models\Recording.cs" />
+    <Compile Include="Models\UserAlbum.cs" />
     <Compile Include="Models\View Models\About\AboutViewModel.cs" />
     <Compile Include="Models\View Models\AccountViewModels.cs" />
     <Compile Include="Models\View Models\About\ComposerAlbumGroup.cs" />
     <Compile Include="Models\View Models\About\ComposerPieceGroup.cs" />
+    <Compile Include="Models\View Models\Album\AddPerformerViewModel.cs" />
+    <Compile Include="Models\View Models\Album\AddPieceViewModel.cs" />
+    <Compile Include="Models\View Models\Album\CreateAlbumViewModel.cs" />
+    <Compile Include="Models\View Models\Collection\CollectionViewModel.cs" />
     <Compile Include="Models\View Models\Composer\ComposerViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\View Models\Performer\PerformerViewModel.cs" />
@@ -345,10 +359,15 @@
     <Content Include="Views\Composer\Details.cshtml" />
     <Content Include="Views\Composer\Edit.cshtml" />
     <Content Include="Views\Composer\Index.cshtml" />
+    <Content Include="Views\Album\_AddAlbum.cshtml" />
+    <Content Include="Views\Collection\Index.cshtml" />
+    <Content Include="Views\Collection\Details.cshtml" />
+    <Content Include="Views\Album\_Page1.cshtml" />
+    <Content Include="Views\Album\_Page2.cshtml" />
+    <Content Include="Views\Album\_Page3.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\View Models\Album\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -361,6 +380,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201702211807187_InitialMigration.resx">
       <DependentUpon>201702211807187_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702232019079_AlbumOwnership.resx">
+      <DependentUpon>201702232019079_AlbumOwnership.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702232141106_Ownership2.resx">
+      <DependentUpon>201702232141106_Ownership2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

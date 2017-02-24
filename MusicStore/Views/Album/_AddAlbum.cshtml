@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNet.Identity
+@model MusicStore.Models.Album
+
+Album ID is: @Model.Id
+
+@if (Request.IsAuthenticated)
+{
+    if (Model.Owners.Any(u => u.ApplicationUserId == User.Identity.GetUserId()))
+    {
+        <p>This item is currently in your collection</p>
+        using (Html.BeginForm("_RemoveAlbum", "Album", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken();
+            @Html.HiddenFor(model => model.Id);
+            <input type="submit" value="x Remove from collection" />
+        }
+    }
+    else
+    {
+        using (Html.BeginForm("_AddAlbum", "Album", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken();
+            @Html.HiddenFor(model => model.Id);
+            <input type="submit" value ="+ Add to collection"/>
+        }
+    }
+}

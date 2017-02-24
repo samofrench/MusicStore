@@ -1,0 +1,99 @@
+﻿@model MusicStore.Models.View_Models.Collection.CollectionViewModel
+@using PagedList
+@using PagedList.Mvc
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "My Collection";
+    //var pagedList = (IPagedList) Model;
+}
+
+<h1>
+    @ViewBag.Title
+</h1>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Albums.FirstOrDefault().Album.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Albums.FirstOrDefault().Album.CatNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Albums.FirstOrDefault().Album.Country)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Albums.FirstOrDefault().Album.Year)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Albums.FirstOrDefault().Sound)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Albums.FirstOrDefault().Condition)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Albums.FirstOrDefault().Eq)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Albums.FirstOrDefault().Notes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Albums.FirstOrDefault().Clean)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Albums.FirstOrDefault().Sell)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Albums.FirstOrDefault().Donate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Albums.FirstOrDefault().Needs)
+        </th>
+    </tr>
+    
+@foreach (var item in Model.Albums)
+{
+    <tr>
+        <td>
+            <a href="@Url.Action("Details", "Album", new { id = item.AlbumId})">
+                @Html.DisplayFor(modelItem => item.Album.Name)
+            </a>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Album.RecordLabel.Name) @Html.DisplayFor(modelItem => item.Album.CatNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Album.Country)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Album.Year)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sound)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Condition)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Eq)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Notes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Clean)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sell)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Donate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Needs)
+        </td>
+    </tr>
+}
+
+</table>

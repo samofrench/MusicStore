@@ -40,5 +40,7 @@ namespace MusicStore.Models
         public byte[] RowVersion { get; set; }
 
         public virtual ICollection<Recording> Recordings { get; set; }
+
+        public virtual ICollection<UserAlbum> Owners { get; set; }
     }
 }

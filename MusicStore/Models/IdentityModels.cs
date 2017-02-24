@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -17,6 +18,8 @@ namespace MusicStore.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        public virtual ICollection<UserAlbum> Albums { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -38,6 +41,7 @@ namespace MusicStore.Models
         public DbSet<Recording> Recordings { get; set; }
         public DbSet<RecordLabel> Labels { get; set; }
         public DbSet<Credit> Credits { get; set; }
+        public DbSet<UserAlbum> UserAlbums { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

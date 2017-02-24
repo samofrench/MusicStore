@@ -1,4 +1,4 @@
-﻿@model MusicStore.Models.Album
+﻿@model MusicStore.Models.View_Models.Album.CreateAlbumViewModel
 
 @{
     ViewBag.Title = "Create";
@@ -6,8 +6,13 @@
 
 <h2>Add New Album</h2>
 
+ViewBag.CurrentPage = @Html.Raw(ViewBag.CurrentPage)
+@{
+    string currentPage = ViewBag.CurrentPage;
+    Html.RenderPartial(currentPage);
+}
 
-@using (Html.BeginForm()) 
+@*@using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
     
@@ -94,7 +99,7 @@
             </div>
         </div>
     </div>
-}
+}*@
 
 <div>
     @Html.ActionLink("Back to List", "Index")

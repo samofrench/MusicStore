@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace MusicStore.Models
 {
@@ -23,6 +20,11 @@ namespace MusicStore.Models
             {
                 return string.Format("{0} {1}", FirstName, LastName);
             }
+        }
+
+        public string AlphaName
+        {
+            get { return string.Format("{0}, {1}", LastName, FirstName); }
         }
 
         public int? BirthYear { get; set; }

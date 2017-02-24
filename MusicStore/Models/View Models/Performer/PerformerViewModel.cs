@@ -17,7 +17,7 @@ namespace MusicStore.Models.View_Models.Performer
 
         public int AlbumsCount { get; set; }
 
-        public List<Album> Albums { get; set; }
+        public List<Models.Album> Albums { get; set; }
 
         public int ComposersCount { get; set; }
 
