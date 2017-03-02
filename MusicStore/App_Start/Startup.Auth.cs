@@ -58,11 +58,11 @@ namespace MusicStore
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "{{CLIENT_ID}}",
+                ClientSecret = "{{CLIENT_SECRET}}"
+            });
         }
     }
 }
