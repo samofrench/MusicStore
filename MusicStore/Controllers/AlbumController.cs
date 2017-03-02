@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
@@ -33,7 +34,6 @@ namespace MusicStore.Controllers
             {
                 searchString = currentFilter;
             }
-
 
             ViewBag.CurrentFilter = searchString;
 
@@ -72,6 +72,7 @@ namespace MusicStore.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Album album = await db.Albums.FindAsync(id);
             if (album == null)
             {
@@ -84,14 +85,11 @@ namespace MusicStore.Controllers
         [Authorize]
         public ActionResult Create()
         {
-
-            //PopulateLabelsDropdown();
+            PopulateLabelsList();
             ViewBag.CurrentPage = "_Page1";
+            var createAlbumViewModel = new CreateAlbumViewModel();
 
-
-
-
-            return View();
+            return View(createAlbumViewModel);
         }
 
         [Authorize]
@@ -100,6 +98,7 @@ namespace MusicStore.Controllers
         public ActionResult Page1(CreateAlbumViewModel viewModel)
         {
             ViewBag.CurrentPage = "_Page1";
+            PopulateLabelsList();
 
             return View("Create", viewModel);
         }
@@ -110,6 +109,15 @@ namespace MusicStore.Controllers
         public ActionResult Page2(CreateAlbumViewModel viewModel)
         {
             ViewBag.CurrentPage = "_Page2";
+            PopulatePiecesList();
+            PopulateComposersList();
+
+            viewModel.Pieces.RemoveAll(p => string.IsNullOrEmpty(p.PieceName));
+
+            for (int i = 0; i < viewModel.Pieces.Count; i++)
+            {
+                viewModel.Pieces[i].Credits.RemoveAll(c => string.IsNullOrEmpty(c.PerformerName));
+            }
 
             return View("Create", viewModel);
         }
@@ -120,6 +128,15 @@ namespace MusicStore.Controllers
         public ActionResult Page3(CreateAlbumViewModel viewModel)
         {
             ViewBag.CurrentPage = "_Page3";
+            PopulatePerformersList();
+            PopulateRolesList();
+
+            viewModel.Pieces.RemoveAll(p => string.IsNullOrEmpty(p.PieceName));
+
+            for (int i = 0; i < viewModel.Pieces.Count; i++)
+            {
+                viewModel.Pieces[i].Credits.RemoveAll(c => string.IsNullOrEmpty(c.PerformerName));
+            }
 
             return View("Create", viewModel);
         }
@@ -129,41 +146,133 @@ namespace MusicStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CreateAlbumViewModel viewModel)
         {
-            return RedirectToAction("Index");
+            // No nulls
+            viewModel.Pieces.RemoveAll(p => string.IsNullOrEmpty(p.PieceName));
 
-            //db.SaveChangesAsync();
+            for (int i = 0; i < viewModel.Pieces.Count; i++)
+            {
+                viewModel.Pieces[i].Credits.RemoveAll(c => string.IsNullOrEmpty(c.PerformerName));
+            }
 
-            //return RedirectToAction("Details", new {id = album.Id});
+            // Album
+            RecordLabel recordLabel;
+            if (db.Labels.Any(l => l.Name == viewModel.RecordLabelName))
+            {
+                recordLabel = db.Labels.First(l => l.Name == viewModel.RecordLabelName);
+            }
+            else
+            {
+                recordLabel = new RecordLabel()
+                {
+                    Name = viewModel.RecordLabelName
+                };
+                db.Labels.Add(recordLabel);
+                await db.SaveChangesAsync();
+            }
+            // => recordLabelID
+
+            var album = new Album()
+            {
+                ArtworkUrl = viewModel.ArtworkUrl,
+                Audio = viewModel.Audio,
+                CatNo = viewModel.CatNo,
+                Country = viewModel.Country,
+                Discs = viewModel.Discs,
+                Name = viewModel.Name,
+                Notes = viewModel.Notes,
+                RecordLabelId = recordLabel.Id,
+                RecordLabel = recordLabel,
+                Year = viewModel.Year
+            };
+            db.Albums.Add(album);
+            await db.SaveChangesAsync();
+            // => albumID
+
+            // Pieces
+            foreach (var pieceVm in viewModel.Pieces)
+            {
+                Composer composer;
+
+                if (pieceVm.ComposerId >= 0)
+                {
+                    composer = db.Composers.First(c => c.Id == pieceVm.ComposerId);
+                }
+                else
+                {
+                    composer = new Composer()
+                    {
+                        LastName = pieceVm.ComposerName
+                    };
+                    db.Composers.Add(composer);
+                    await db.SaveChangesAsync();
+                }
+                // => composerID
+
+                Piece piece;
+                if (pieceVm.PieceId >= 0)
+                {
+                    piece = db.Pieces.First(p => p.Id == pieceVm.PieceId);
+                }
+                else
+                {
+                    piece = new Piece()
+                    {
+                        Name = pieceVm.PieceName,
+                        ComposerId = composer.Id,
+                        Composer = composer
+                    };
+                }
+                // => pieceID
+
+                var recording = new Recording()
+                {
+                    Album = album,
+                    AlbumId = album.Id,
+                    Piece = piece,
+                    PieceId = piece.Id,
+                };
+
+                db.Recordings.Add(recording);
+                await db.SaveChangesAsync();
+                // => recordingID
+
+                foreach (var creditVm in pieceVm.Credits)
+                {
+                    Performer performer;
+                    if (creditVm.PerformerId >= 0)
+                    {
+                        performer = db.Performers.First(p => p.Id == creditVm.PerformerId);
+                    }
+                    else
+                    {
+                        performer = new Performer()
+                        {
+                            Name = creditVm.PerformerName
+                        };
+
+                        db.Performers.Add(performer);
+                        await db.SaveChangesAsync();
+                    }
+                    // => performerID
+
+                    var credit = new Credit()
+                    {
+                        Performer = performer,
+                        PerformerId = performer.Id,
+                        Recording = recording,
+                        RecordingId = recording.RecordingId,
+                        Role = creditVm.Role
+                    };
+
+                    db.Credits.Add(credit);
+                    await db.SaveChangesAsync();
+                    // => creditID
+                }
+                
+            }
+            
+            return RedirectToAction("Details", new {id = album.Id});
         }
-
-        // POST: Album/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[Authorize]
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> Create(
-        //    [Bind(Include = "Name,RecordLabelId,RecordLabel,CatNo,ArtworkUrl,Notes,Country,Year,Discs,Audio")] Album
-        //        album)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            db.Albums.Add(album);
-        //            await db.SaveChangesAsync();
-        //            return RedirectToAction("Index");
-        //        }
-        //    }
-        //    catch (RetryLimitExceededException exception)
-        //    {
-        //        ModelState.AddModelError("",
-        //            "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-        //    }
-
-        //    PopulateLabelsDropdown(album.RecordLabelId);
-        //    return View(album);
-        //}
 
         // GET: Album/Edit/5
         [Authorize(Roles = "canEditUsers")]
@@ -180,8 +289,6 @@ namespace MusicStore.Controllers
             {
                 return HttpNotFound();
             }
-
-            PopulateLabelsDropdown(album.RecordLabelId);
 
             return View(album);
         }
@@ -277,8 +384,6 @@ namespace MusicStore.Controllers
                 }
             }
 
-            PopulateLabelsDropdown(albumToUpdate.RecordLabelId);
-
             return View(albumToUpdate);
         }
 
@@ -338,38 +443,74 @@ namespace MusicStore.Controllers
             }
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private void PopulateLabelsDropdown(object selected = null)
+        private void PopulateLabelsList()
         {
             var query = db.Labels.OrderByDescending(l => l.Albums.Count);
 
-            ViewBag.RecordLabelId = new SelectList(query, "Id", "Name", selected);
+            var labelsList = new Dictionary<int, string>();
+
+            foreach (var item in query)
+            {
+                labelsList.Add(item.Id, item.Name);
+            }
+
+            ViewBag.RecordLabelsList = labelsList;
         }
 
-        private void PopulatePiecesDropdown(object selected = null)
+        private void PopulatePiecesList()
         {
             var query = db.Pieces.OrderBy(p => p.Composer.LastName);
-            ViewBag.PieceId = new SelectList(query, "Id", "Name", selected);
+
+            var piecesList = new Dictionary<int, string>();
+
+            foreach (var item in query)
+            {
+                piecesList.Add(item.Id, string.Format("{0} ({1})", item.Name, item.Composer.FullName));
+            }
+
+            ViewBag.PiecesList = piecesList;
         }
 
-        private void PopulateComposersDropdown(object selected = null)
+        private void PopulateComposersList()
         {
             var query = db.Composers.OrderBy(p => p.LastName);
-            ViewBag.ComposerId = new SelectList(query, "Id", "AlphaName", selected);
+
+            var composersList = new Dictionary<int, string>();
+
+            foreach (var item in query)
+            {
+                composersList.Add(item.Id, string.Format("{0}, {1}", item.LastName, item.FirstName));
+            }
+
+            ViewBag.ComposersList = composersList;
         }
 
-        private void PopulatePerformersDropdown(object selected = null)
+        private void PopulatePerformersList()
         {
             var query = db.Performers.OrderBy(p => p.Name);
-            ViewBag.PerfoermerId = new SelectList(query, "Id", "Name", selected);
+
+            var performersList = new Dictionary<int, string>();
+
+            foreach (var item in query)
+            {
+                performersList.Add(item.Id, item.Name);
+            }
+
+            ViewBag.PerformersList = performersList;
+        }
+
+        public void PopulateRolesList()
+        {
+            var query = db.Credits.Select(c => c.Role).Distinct().ToList();
+
+            var rolesList = new Dictionary<int, string>();
+
+            for (var i = 0; i < query.Count(); i++)
+            {
+                rolesList.Add(i, query[i]);
+            }
+
+            ViewBag.RolesList = rolesList;
         }
 
         public ActionResult _AddAlbum(Album album)
@@ -427,6 +568,15 @@ namespace MusicStore.Controllers
             }
 
             return RedirectToAction("Details", album);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
     }

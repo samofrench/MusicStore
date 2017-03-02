@@ -1,6 +1,188 @@
-﻿@using (Html.BeginForm())
+﻿@model MusicStore.Models.View_Models.Album.CreateAlbumViewModel
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.RecordLabelName)
+    @Html.HiddenFor(m => m.Name)
+    @Html.HiddenFor(m => m.CatNo)
+    @Html.HiddenFor(m => m.ArtworkUrl)
+    @Html.HiddenFor(m => m.Notes)
+    @Html.HiddenFor(m => m.Country)
+    @Html.HiddenFor(m => m.Year)
+    @Html.HiddenFor(m => m.Discs)
+    @Html.HiddenFor(m => m.Audio)
+    @Html.HiddenFor(model => Model.AddAlbumToMyCollection)
+
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RecordLabelName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RecordLabelName)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.CatNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CatNo)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.ArtworkUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ArtworkUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Country)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Country)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Discs)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Discs)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Audio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Audio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+    </dl>
+
+    <div id="piecesEditor" class="col-md-6">    
+            @{
+                for (int i = 0; i <= Model.Pieces.Count; i++)
+                {
+                    <div class="row" id="pieceContainer-@i">
+                        <div class="col-md-6">
+                            <input class="piecetextbox text-box single-line valid" id="pieces-@i" type="text" name="@string.Format("Pieces[{0}].PieceName", i)" value="@Html.Raw((@Model.Pieces.Count > i) ? @Model.Pieces[i].PieceName : "")">
+                            <input id="pieceid-@i" name="@string.Format("Pieces[{0}].PieceId", i)" type="hidden" value="@Html.Raw((@Model.Pieces.Count > i) ? @Model.Pieces[i].PieceId : -1)">
+
+                            <ul class="piecesList">
+                                @foreach (var item in ViewBag.PiecesList)
+                                {
+
+                                    <li data-id="@i, @item.Key" class="pieces-@i" onclick="setPiece('@i', '@item.Value', '@item.Key')">@item.Value</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <input class="composertextbox text-box single-line valid" id="composers-@i" type="text" name="@string.Format("Pieces[{0}].ComposerName", i)" value="@Html.Raw((@Model.Pieces.Count > i) ? @Model.Pieces[i].ComposerName : "")">
+                            <input id="composerid-@i" name="@string.Format("Pieces[{0}].ComposerId", i)" type="hidden" value="@Html.Raw((@Model.Pieces.Count > i) ? @Model.Pieces[i].ComposerId : -1)">
+
+                            <ul class="composerList">
+                                @foreach (var item in ViewBag.ComposersList)
+                                {
+
+                                    <li data-id="@i, @item.Key" class="composers-@i" onclick="setComposer('@i', '@item.Value', '@item.Key')">@item.Value</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="button" onclick="removePiece(@i)">x Remove piece</div>
+                    </div>
+
+                    if (Model.Pieces.Count > i)
+                    {                        
+                        for (int j = 0; j < Model.Pieces[i].Credits.Count; j++)
+                        {
+                            @Html.HiddenFor(model => Model.Pieces[i].Credits[j].PerformerId)
+                            @Html.HiddenFor(model => Model.Pieces[i].Credits[j].PerformerName)
+                            @Html.HiddenFor(model => Model.Pieces[i].Credits[j].Role)
+                        }
+                    }
+
+                }
+
+                <input type="submit" value="+ Add piece" formaction="/Album/Page2" formmethod="post" />
+            }
+    </div>
+
     <input type="submit" value="Prev" formaction="/Album/Page1" formmethod="post" />
     <input type="submit" value="Next" formaction="/Album/Page3" formmethod="post" />
 }
+
+<script>
+    function setPiece(fieldId, name, id) {
+        $('#pieces-' + fieldId).val(name);
+        $('#pieceid-' + fieldId).val(id);
+    };
+
+    function setComposer(fieldId, name, id) {
+        $('#composers-' + fieldId).val(name);
+        $('#composerid-' + fieldId).val(id);
+    };
+
+    function removePiece(id) {
+        $('#pieceContainer-' + id).remove();
+    }
+
+    function filterTerms() {
+        var query = $(this).val().toLowerCase();
+        var className = $(this).attr('id');
+        var index = className.split('-')[1];
+        
+        if ($(this).is('[class^=piece]')) {
+            $('#pieceid-' + index).val(-1);
+        } else if ($(this).is('[class^=composer]')) {
+            $('#composerid-' + index).val(-1);
+        }
+
+
+        $('li[class=' + className + ']')
+            .each(function() {
+                if ($(this).text().toLowerCase().indexOf(query) >= 0) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+    }
+
+    $(document).ready(function() {
+
+        $('.piecetextbox').keyup(filterTerms);
+        $('.composertextbox').keyup(filterTerms);
+
+    });
+
+</script>

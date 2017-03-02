@@ -1,5 +1,125 @@
-﻿@using (Html.BeginForm())
+﻿@model MusicStore.Models.View_Models.Album.CreateAlbumViewModel
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => Model.AddAlbumToMyCollection)
+
+    for (int i = 0; i < Model.Pieces.Count; i++)
+    {
+        @Html.HiddenFor(model => Model.Pieces[i].PieceName)
+        @Html.HiddenFor(model => Model.Pieces[i].PieceId)
+        @Html.HiddenFor(model => Model.Pieces[i].ComposerName)
+        @Html.HiddenFor(model => Model.Pieces[i].ComposerId)
+
+        for (int j = 0; j < Model.Pieces[i].Credits.Count; j++)
+        {
+            @Html.HiddenFor(model => Model.Pieces[i].Credits[j].PerformerId)
+            @Html.HiddenFor(model => Model.Pieces[i].Credits[j].PerformerName)
+            @Html.HiddenFor(model => Model.Pieces[i].Credits[j].Role)
+        }
+    }
+
+    // name
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, htmlAttributes: new {@class = ""})
+        <div class="">
+            @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = ""}})
+        </div>
+    </div>
+
+    // label
+    <div class="form-group">
+        @Html.LabelFor(model => model.RecordLabelName)
+        <div class="">
+            @Html.EditorFor(model => model.RecordLabelName, new { htmlAttributes = new {@id = "labeltextbox"} })
+        </div>
+        <ul class="labelsList">
+            @foreach (var item in ViewBag.RecordLabelsList)
+            {
+
+                <li data-id="@item.Key" class="labelsListItem" onclick="setItem('@item.Value')">@item.Value</li>
+            }
+        </ul>
+    </div>
+
+    // catno
+    <div class="form-group">
+        @Html.LabelFor(model => model.CatNo, htmlAttributes: new { @class = "" })
+        <div class="">
+            @Html.EditorFor(model => model.CatNo, new { htmlAttributes = new { @class = "" } })
+        </div>
+    </div>
+
+    // art url
+    <div class="form-group">
+        @Html.LabelFor(model => model.ArtworkUrl, htmlAttributes: new { @class = "" })
+        <div class="">
+            @Html.EditorFor(model => model.ArtworkUrl, new { htmlAttributes = new { @class = "" } })
+        </div>
+    </div>
+
+    // notes
+    <div class="form-group">
+        @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "" })
+        <div class="">
+            @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "" } })
+        </div>
+    </div>
+
+    // country
+    <div class="form-group">
+        @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "" })
+        <div class="">
+            @Html.EnumDropDownListFor(model => model.Country, htmlAttributes: new { @class = "" })
+        </div>
+    </div>
+
+    // year
+    <div class="form-group">
+        @Html.LabelFor(model => model.Year, htmlAttributes: new { @class = "" })
+        <div class="">
+            @Html.EditorFor(model => model.Year, new { htmlAttributes = new { @class = "" } })
+        </div>
+    </div>
+
+    // discs
+    <div class="form-group">
+        @Html.LabelFor(model => model.Discs, htmlAttributes: new { @class = "" })
+        <div class="">
+            @Html.EditorFor(model => model.Discs, new { htmlAttributes = new { @class = "" } })
+        </div>
+    </div>
+
+    // audio
+    <div class="form-group">
+        @Html.LabelFor(model => model.Audio, htmlAttributes: new { @class = "" })
+        <div class="">
+            @Html.EnumDropDownListFor(model => model.Audio, htmlAttributes: new { @class = "" })
+        </div>
+    </div>
+
     <input type="submit" value="Next" formaction="/Album/Page2" formmethod="post" />
 }
+
+<script>
+    function setItem(value) {
+        $('#labeltextbox').val(value);
+    };
+    $(document).ready(function() {
+
+        $('#labeltextbox')
+            .keyup(function() {
+                var query = $(this).val().toLowerCase();
+
+                $('.labelsList li.labelsListItem')
+                    .each(function() {
+                        if ($(this).text().toLowerCase().indexOf(query) >= 0) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+            });
+    });
+</script>

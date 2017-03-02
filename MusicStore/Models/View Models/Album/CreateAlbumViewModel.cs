@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace MusicStore.Models.View_Models.Album
 {
     public class CreateAlbumViewModel
     {
         // Label
-        public bool NewLabel { get; set; }
-        public int RecordLabelId { get; set; }
         public string RecordLabelName { get; set; }
 
         // Album
@@ -19,10 +18,15 @@ namespace MusicStore.Models.View_Models.Album
         public int Discs { get; set; }
         public Enums.Audio Audio { get; set; }
 
+        [DisplayName("Add album to my collection")]
+        public bool AddAlbumToMyCollection { get; set; }
+
         // Pieces
         public List<AddPieceViewModel> Pieces { get; set; }
 
-        // Performers
-        public List<AddPerformerViewModel> Credits { get; set; }
+        public CreateAlbumViewModel()
+        {
+            Pieces = new List<AddPieceViewModel>();
+        }
     }
 }

@@ -1,6 +1,197 @@
-﻿@using (Html.BeginForm())
+﻿@model MusicStore.Models.View_Models.Album.CreateAlbumViewModel
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.RecordLabelName)
+    @Html.HiddenFor(m => m.Name)
+    @Html.HiddenFor(m => m.CatNo)
+    @Html.HiddenFor(m => m.ArtworkUrl)
+    @Html.HiddenFor(m => m.Notes)
+    @Html.HiddenFor(m => m.Country)
+    @Html.HiddenFor(m => m.Year)
+    @Html.HiddenFor(m => m.Discs)
+    @Html.HiddenFor(m => m.Audio)
+
+    for (int i = 0; i < Model.Pieces.Count; i++)
+    {
+        @Html.HiddenFor(model => Model.Pieces[i].PieceName)
+        @Html.HiddenFor(model => Model.Pieces[i].PieceId)
+        @Html.HiddenFor(model => Model.Pieces[i].ComposerName)
+        @Html.HiddenFor(model => Model.Pieces[i].ComposerId)
+    }
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RecordLabelName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RecordLabelName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CatNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CatNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ArtworkUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ArtworkUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Country)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Country)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Discs)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Discs)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Audio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Audio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+    </dl>
+
+    <div class="piecesEditor">
+    @{        
+        for (int i = 0; i < Model.Pieces.Count; i++)
+        {
+            @Html.DisplayFor(model => Model.Pieces[i].PieceName)
+            @Html.DisplayFor(model => Model.Pieces[i].ComposerName)
+            @Html.HiddenFor(model => Model.Pieces[i].PieceId)
+            @Html.HiddenFor(model => Model.Pieces[i].ComposerId)
+
+            for (int j = 0; j <= Model.Pieces[i].Credits.Count; j++)
+            {
+                <div class="row" id="creditContainer-@i-@j">
+                    <div class="col-md-6">
+                        <input class="credittextbox text-box single-line valid" id="credits-@i-@j" type="text" name="@string.Format("Pieces[{0}].Credits[{1}].PerformerName", i, j)" value="@Html.Raw((@Model.Pieces[i].Credits.Count > j) ? @Model.Pieces[i].Credits[j].PerformerName : "")">
+                        <input id="creditid-@i-@j" name="@string.Format("Pieces[{0}].Credits[{1}].PerformerId", i, j)" type="hidden" value="@Html.Raw((@Model.Pieces[i].Credits.Count > j) ? @Model.Pieces[i].Credits[j].PerformerId : -1)">
+                
+                        <ul class="performersList">
+                            @foreach (var item in ViewBag.PerformersList)
+                            {
+
+                                <li data-id="@i, @item.Key" class="credits-@i-@j" onclick="setPerformer('@i', '@j', '@item.Value', '@item.Key')">@item.Value</li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <input class="roletextbox text-box single-line valid" id="roles-@i-@j" type="text" name="@string.Format("Pieces[{0}].Credits[{1}].Role", i, j)" value="@Html.Raw((@Model.Pieces[i].Credits.Count > j) ? @Model.Pieces[i].Credits[j].Role : "")">
+                    
+                        <ul class="rolesList">
+                            @foreach (var item in ViewBag.RolesList)
+                            {
+
+                                <li class="roles-@i-@j" onclick="setRole('@i', '@j', '@item.Value')">@item.Value</li>
+                            }
+                        </ul>
+                    </div>
+                   <div class="button" onclick="removeCredit(@i, @j)">x Remove credit</div>
+                </div>
+            }
+
+            <input type="submit" value="+ Add credit" formaction="/Album/Page3" formmethod="post" />
+
+        }
+    }    
+    </div>
+
+    // Add to my collection
+    <div class="form-group">
+        @Html.LabelFor(model => model.AddAlbumToMyCollection, htmlAttributes: new { @class = "" })
+        <div class="">
+            @Html.CheckBoxFor(model => model.AddAlbumToMyCollection, new { htmlAttributes = new { @class = "" } })
+        </div>
+    </div>
+
     <input type="submit" value="Prev" formaction="/Album/Page2" formmethod="post" />
     <input type="submit" value="Finish" formaction="/Album/Create" formmethod="post" />
 }
+
+<script>
+    function setPerformer(pieceIndex, creditIndex, performerName, performerId) {
+        $('#credits-' + pieceIndex + '-' + creditIndex).val(performerName);
+        $('#creditid-' + pieceIndex + '-' + creditIndex).val(performerId);
+    };
+
+    function setRole(pieceIndex, creditIndex, role) {
+        $('#roles-' + pieceIndex + '-' + creditIndex).val(role);
+    };
+
+    function removeCredit(pieceIndex, creditIndex) {
+        $('#creditContainer-' + pieceIndex + '-' + creditIndex).remove();
+    }
+
+    function filterTerms() {
+        var query = $(this).val().toLowerCase();
+        var className = $(this).attr('id');
+
+        var pieceIndex = className.split('-')[1];
+        var creditIndex = className.split('-')[2];
+        
+        if ($(this).is('[class^=credit]')) {
+            $('#creditid-' + pieceIndex + '-' + creditIndex).val(-1);
+        }
+
+        $('li[class=' + className + ']')
+            .each(function() {
+                if ($(this).text().toLowerCase().indexOf(query) >= 0) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+    }
+
+    $(document).ready(function() {
+
+        $('.credittextbox').keyup(filterTerms);
+        $('.roletextbox').keyup(filterTerms);
+
+    });
+
+</script>
